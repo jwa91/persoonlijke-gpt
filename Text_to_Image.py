@@ -2,7 +2,7 @@ import streamlit as st
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings, HuggingFaceInstructEmbeddings
+from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
@@ -64,26 +64,17 @@ def handle_userinput(user_question):
                 "{{MSG}}", message.content), unsafe_allow_html=True)
 
 
-def main():
+
+def run():
     load_dotenv()
-    st.set_page_config(page_title="Willem GPT",
-                       page_icon=":books:")
     st.write(css, unsafe_allow_html=True)
 
-    if "conversation" not in st.session_state:
-        st.session_state.conversation = None
-    if "chat_history" not in st.session_state:
-        st.session_state.chat_history = None
+    # Creëer twee kolommen
+    col1, col2 = st.columns([3, 7])
 
-    st.header("WillemGPT :books:")
-    user_question = st.text_input("stel een vraag over je documenten:")
-    if user_question:
-        handle_userinput(user_question)
-
-    with st.sidebar:
-        st.subheader("Je documenten")
-        pdf_docs = st.file_uploader(
-            "Upload je PDFs hier en klik op verwerken", accept_multiple_files=True)
+    with col1:
+        st.subheader("Tijdelijke documenten")
+        pdf_docs = st.file_uploader("Upload je PDFs hier en klik op verwerken", accept_multiple_files=True)
         if st.button("Verwerken"):
             with st.spinner("Verwerken"):
                 # get pdf text
@@ -96,9 +87,18 @@ def main():
                 vectorstore = get_vectorstore(text_chunks)
 
                 # create conversation chain
-                st.session_state.conversation = get_conversation_chain(
-                    vectorstore)
+                st.session_state.conversation = get_conversation_chain(vectorstore)
 
+    with col2:
+        st.header("WillemGPT :books:")
+        if "conversation" not in st.session_state:
+            st.session_state.conversation = None
+        if "chat_history" not in st.session_state:
+            st.session_state.chat_history = None
 
-if __name__ == '__main__':
-    main()
+        user_question = st.text_input("Stel een vraag over je documenten:")
+        if user_question:
+            handle_userinput(user_question)
+
+if __name__ == "__main__":
+    run()

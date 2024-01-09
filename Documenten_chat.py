@@ -2,7 +2,7 @@ import streamlit as st
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings, HuggingFaceInstructEmbeddings
+from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
@@ -64,41 +64,40 @@ def handle_userinput(user_question):
                 "{{MSG}}", message.content), unsafe_allow_html=True)
 
 
-def main():
+
+def run():
     load_dotenv()
-    st.set_page_config(page_title="Willem GPT",
-                       page_icon=":books:")
+    st.title("WillemGPT🍺")  # Titel toegevoegd bovenaan de pagina
     st.write(css, unsafe_allow_html=True)
 
-    if "conversation" not in st.session_state:
-        st.session_state.conversation = None
-    if "chat_history" not in st.session_state:
-        st.session_state.chat_history = None
+    tab1, tab2 = st.tabs(["Documenten Uploaden", "Chat"])
 
-    st.header("WillemGPT :books:")
-    user_question = st.text_input("stel een vraag over je documenten:")
-    if user_question:
-        handle_userinput(user_question)
-
-    with st.sidebar:
-        st.subheader("Je documenten")
-        pdf_docs = st.file_uploader(
-            "Upload je PDFs hier en klik op verwerken", accept_multiple_files=True)
+    with tab1:
+        st.subheader("Upload je PDFs")
+        st.markdown("""
+            Voeg 1 of meerdere pdf bestanden toe door ze te slepen of te selecteren. Voor de keuze van het [embeddings](https://en.wikipedia.org/wiki/Word_embedding) 
+                    model kun je de `get_vectorstore` functie gebruiken. Voor de keuze van het [LLM](https://en.wikipedia.org/wiki/Large_language_model) 
+                    gebruik je de `LLM` variabele in de `get_conversational_chain` functie.
+                    gebruik het [Huggingface leaderboard](https://huggingface.co/spaces/mteb/leaderboard) om een goede keuze te maken.
+                
+        """)
+        pdf_docs = st.file_uploader("Kies bestanden", accept_multiple_files=True)
         if st.button("Verwerken"):
-            with st.spinner("Verwerken"):
-                # get pdf text
+            with st.spinner("Verwerken..."):
                 raw_text = get_pdf_text(pdf_docs)
-
-                # get the text chunks
                 text_chunks = get_text_chunks(raw_text)
-
-                # create vector store
                 vectorstore = get_vectorstore(text_chunks)
+                st.session_state.conversation = get_conversation_chain(vectorstore)
 
-                # create conversation chain
-                st.session_state.conversation = get_conversation_chain(
-                    vectorstore)
+    with tab2:
+        if "conversation" not in st.session_state:
+            st.session_state.conversation = None
+        if "chat_history" not in st.session_state:
+            st.session_state.chat_history = None
 
+        user_question = st.text_input("Stel een vraag over je documenten:")
+        if user_question:
+            handle_userinput(user_question)
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    run()
