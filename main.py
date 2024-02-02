@@ -6,14 +6,11 @@ def main():
 
     st.title("WillemGPT🍺")  # Algemene titel bovenaan elke pagina
 
-    with st.sidebar:
-        st.title("Menu")  # Titel voor de menubalk
-
     show_pages(
         [
-            Page("Documenten_chat.py", "Chat met je PDFs OpenAI", "📎"),
+            Page("Documenten_chat.py", "Chat met je PDFs", "📎"),
             Page("Text_to_Image.py", "Text to Image", "🖼️"),
-            Page("Documenten_chat_lokaal.py", "Chat met je PDFs lokaal", "📎"),
+            Page("dailyemailcast.py", "Maak een podcast van je ongelezen mail", "🎧"),
             Page("Instellingen.py", "Instellingen", "⚙️")
         ]
     )

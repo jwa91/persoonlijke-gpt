@@ -1,0 +1,1 @@
+Develop a script for an email podcast that starts with "Today in the daily email summary...". Continue that sentence with a very short summary of all the emails you will cover. Then summarize each email in a maximum of 5 sentences. Do this in a business manner.

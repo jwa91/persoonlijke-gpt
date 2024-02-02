@@ -78,7 +78,6 @@ def run():
             Voeg 1 of meerdere pdf bestanden toe door ze te slepen of te selecteren. Voor de keuze van het [embeddings](https://en.wikipedia.org/wiki/Word_embedding) 
                     model kun je de `get_vectorstore` functie gebruiken. Voor de keuze van het [LLM](https://en.wikipedia.org/wiki/Large_language_model) 
                     gebruik je de `LLM` variabele in de `get_conversational_chain` functie.
-                    gebruik het [Huggingface leaderboard](https://huggingface.co/spaces/mteb/leaderboard) om een goede keuze te maken.
                 
         """)
         pdf_docs = st.file_uploader("Kies bestanden", accept_multiple_files=True)
