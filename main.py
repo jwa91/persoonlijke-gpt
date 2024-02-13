@@ -10,6 +10,7 @@ def main():
         [
             Page("Documenten_chat.py", "Chat met je PDFs", "📎"),
             Page("Text_to_Image.py", "Text to Image", "🖼️"),
+            Page("shownotes.py", "AI shownotes generator","📝"),
             Page("dailyemailcast.py", "Maak een podcast van je ongelezen mail", "🎧"),
             Page("Instellingen.py", "Instellingen", "⚙️")
         ]
